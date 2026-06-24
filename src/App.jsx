@@ -13,24 +13,23 @@ function App() {
     }
   };
 
-  const generateSummary = () => {
-    setSummary(
-      `${topic} is an important topic. This summary was generated for learning purposes.`
-    );
-  };
+  const generateSummary = async () => {
+  const res = await fetch(`http://127.0.0.1:8000/summary?topic=${topic}`);
+  const data = await res.json();
+  setSummary(data.summary);
+};
 
-  const generateQuiz = () => {
-    setQuiz([
-      {
-        question: `What is ${topic}?`,
-        options: ["Concept", "Fruit", "Animal", "Vehicle"],
-      },
-      {
-        question: `${topic} belongs to which category?`,
-        options: ["Education", "Movie", "Game", "Food"],
-      },
-    ]);
-  };
+  const generateQuiz = async () => {
+  const res = await fetch(`http://127.0.0.1:8000/quiz?topic=${topic}`);
+  const data = await res.json();
+
+  setQuiz(
+    data.questions.map((q) => ({
+      question: q,
+      options: ["A", "B", "C", "D"],
+    }))
+  );
+};
 
   if (!loggedIn) {
     return (
